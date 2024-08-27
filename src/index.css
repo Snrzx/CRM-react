@@ -1,0 +1,16 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@layer components{
+
+    .campoForm{
+        @apply my-2 block w-full p-2 bg-gray-200 border-gray-300 border rounded-lg shadow-md placeholder-gray-400
+    }
+    .boton{
+        @apply transition-all p-3 rounded-lg w-full text-white uppercase cursor-pointer
+    }
+    .Error{
+        @apply mb-1 bg-red-600 text-white p-2 uppercase text-center rounded-md
+    }
+}
