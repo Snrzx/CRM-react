@@ -1,8 +1,13 @@
 import { Formik, Form, Field } from "formik"
 import * as yup from 'yup'
 import Error from "./Error"
+import { useNavigate } from "react-router-dom"
 
 function Formulario(){
+    const navigate= useNavigate()
+
+
+    // Función que se encarga de realizar distintas validaciones a los campos.
     const newClientSchema = yup.object().shape({
         nombre: yup.string()
         .min(3, 'El nombre escrito es muy corto')
@@ -21,13 +26,27 @@ function Formulario(){
         .typeError('El número no es válido')
     })
 
-    const handleSubmit=(values)=>{
+    const handleSubmit= async (values)=>{
+        try {
+            const url= 'http://localhost:3000/clientes'
+            const respuesta= await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(values),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
 
+            const resultado= await respuesta.json()
+            navigate('/clientes')
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return(
         <div>
-            <div className="bg-white text-gray-500 font-bold shadow-lg rounded-lg mt-10 border border-gray-300 p-5 lg:w-1/2 mx-auto">
+            <div className="componente lg:w-1/2">
                 <h1 className="text-2xl mb-10 text-center">Agregar Cliente</h1>
 
                 <Formik initialValues={{
@@ -36,7 +55,7 @@ function Formulario(){
                     email: '',
                     telefono: '',
                     notas: ''
-                }} onSubmit={(values)=>{handleSubmit(values)}}
+                }} onSubmit={async  (values, {resetForm})=>{handleSubmit(values), resetForm()}}
                     validationSchema={newClientSchema}
                 >
                      
@@ -67,7 +86,7 @@ function Formulario(){
                             <Field className="campoForm" id="notas" type="text" name="notas" as="textarea" placeholder='Notas' />
                             {errors.notas && touched.notas ? <Error>{errors.notas}</Error> : null}
                         </div>
-                        <input type="submit" value="Agregar Cliente" className="boton bg-indigo-600 hover:bg-indigo-800"/>
+                        <input type="submit" value="Agregar Cliente" className="boton bg-indigo-600 hover:bg-indigo-800 p-3"/>
                     </Form>
                     )
                 }}
