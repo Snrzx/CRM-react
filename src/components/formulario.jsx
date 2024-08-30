@@ -2,8 +2,9 @@ import { Formik, Form, Field } from "formik"
 import * as yup from 'yup'
 import Error from "./Error"
 import { useNavigate } from "react-router-dom"
+import Spin from "./spin"
 
-function Formulario(){
+function Formulario({cliente, loading}){
     const navigate= useNavigate()
 
 
@@ -28,16 +29,27 @@ function Formulario(){
 
     const handleSubmit= async (values)=>{
         try {
-            const url= 'http://localhost:3000/clientes'
-            const respuesta= await fetch(url, {
-                method: "POST",
-                body: JSON.stringify(values),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-
-            const resultado= await respuesta.json()
+            let respuesta
+            if (cliente.id){
+                const url= `${import.meta.env.VITE_API_URL}/${cliente.id}`
+                respuesta= await fetch(url, {
+                    method: "PUT",
+                    body: JSON.stringify(values),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            } else{
+                const url= import.meta.env.VITE_API_URL
+                respuesta= await fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify(values),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            }
+            await respuesta.json()
             navigate('/clientes')
         } catch (error) {
             console.log(error)
@@ -46,16 +58,19 @@ function Formulario(){
 
     return(
         <div>
-            <div className="componente lg:w-1/2">
-                <h1 className="text-2xl mb-10 text-center">Agregar Cliente</h1>
+            {loading ? <Spin /> : (
+                <div className="componente p-5 lg:w-1/2">
+                <h1 className="text-2xl mb-5 text-center text-indigo-800 font-black">{cliente.nombre ? 'Editar Cliente' : 'Agregando Cliente'}</h1>
 
                 <Formik initialValues={{
-                    nombre: '',
-                    empresa: '',
-                    email: '',
-                    telefono: '',
-                    notas: ''
-                }} onSubmit={async  (values, {resetForm})=>{handleSubmit(values), resetForm()}}
+                    nombre: cliente?.nombre ?? '',
+                    empresa: cliente?.empresa ?? '',
+                    email: cliente?.email ?? '',
+                    telefono: cliente?.telefono ?? '',
+                    notas: cliente?.notas ?? ''
+                }} 
+                enableReinitialize={true}
+                onSubmit={async  (values, {resetForm})=>{handleSubmit(values), resetForm()}}
                     validationSchema={newClientSchema}
                 >
                      
@@ -86,12 +101,12 @@ function Formulario(){
                             <Field className="campoForm" id="notas" type="text" name="notas" as="textarea" placeholder='Notas' />
                             {errors.notas && touched.notas ? <Error>{errors.notas}</Error> : null}
                         </div>
-                        <input type="submit" value="Agregar Cliente" className="boton bg-indigo-600 hover:bg-indigo-800 p-3"/>
+                        <input type="submit" value={cliente.nombre ? 'Editar Cliente' : 'Agregar Cliente'} className="boton bg-indigo-600 hover:bg-indigo-800 p-3 mt-2 rounded-lg"/>
                     </Form>
                     )
                 }}
                 </Formik>
-            </div>
+            </div>)}        
         </div>
     )
 }

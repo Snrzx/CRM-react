@@ -8,12 +8,15 @@
         @apply my-2 block w-full p-2 bg-gray-200 border-gray-300 border rounded-lg shadow-md placeholder-gray-400
     }
     .boton{
-        @apply transition-all rounded-lg w-full text-white uppercase cursor-pointer
+        @apply transition-all w-full text-white uppercase cursor-pointer
+    }
+    .titulo{
+        @apply text-3xl font-black text-indigo-800 my-2
     }
     .Error{
         @apply mb-1 bg-red-600 text-white p-2 uppercase text-center rounded-md
     }
     .componente{
-        @apply bg-white text-gray-500 font-bold shadow-lg rounded-lg mt-10 border border-gray-300 p-5 mx-auto text-center
+        @apply bg-slate-200 border-gray-300 text-gray-500 font-bold shadow-lg rounded-lg mt-10 border mx-auto text-center
     }
 }
