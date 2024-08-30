@@ -11,7 +11,7 @@ function App() {
     <div>
       <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<Navigate to="/clientes" replace />} />    
+        <Route path="/" element={<Navigate to="/clientes" replace />} />    
         <Route path='/clientes' element={<Layaout />} >
           <Route index element={<Index />} />
           <Route path='nuevo' element={<NewClient />} />
