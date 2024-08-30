@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layaout from './layout/Layout'
 import Index from './pages'
 import NewClient from './pages/newClient'
@@ -11,7 +11,6 @@ function App() {
     <div>
       <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/clientes" replace />} />    
         <Route path='/clientes' element={<Layaout />} >
           <Route index element={<Index />} />
           <Route path='nuevo' element={<NewClient />} />
